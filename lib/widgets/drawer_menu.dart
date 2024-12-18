@@ -10,6 +10,7 @@ class DrawerMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: Colors.grey,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -49,7 +50,6 @@ class _DrawerHeaderAlternative extends StatelessWidget {
       padding: EdgeInsets.zero,
       child: Stack(
         children: [
-          // Cuadrado morado inclinado
           Positioned(
             top: -50,
             left: -30,
@@ -63,7 +63,6 @@ class _DrawerHeaderAlternative extends StatelessWidget {
               transform: Matrix4.rotationZ(0.3),
             ),
           ),
-          // Rectángulo naranja inclinado
           Positioned(
             bottom: -20,
             right: -40,
@@ -77,7 +76,6 @@ class _DrawerHeaderAlternative extends StatelessWidget {
               transform: Matrix4.rotationZ(-0.5),
             ),
           ),
-          // Cuadrado celeste pequeño
           Positioned(
             top: 30,
             right: 20,
@@ -91,7 +89,6 @@ class _DrawerHeaderAlternative extends StatelessWidget {
               transform: Matrix4.rotationZ(0.8),
             ),
           ),
-          // Rectángulo verde inclinado
           Positioned(
             bottom: 50,
             left: 80,
@@ -105,7 +102,6 @@ class _DrawerHeaderAlternative extends StatelessWidget {
               transform: Matrix4.rotationZ(-0.8),
             ),
           ),
-          // Texto principal
           Container(
             alignment: Alignment.bottomRight,
             padding: const EdgeInsets.symmetric(horizontal: 10),

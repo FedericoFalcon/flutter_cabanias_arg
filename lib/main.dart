@@ -11,10 +11,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Demo',
+      title: 'CabaniasArg',
       home: HomeScreen(),
       debugShowCheckedModeBanner: false,
-      initialRoute: 'listview1',
+      initialRoute: 'home',
       routes: {
         'home': (context) => const HomeScreen(),
       },
