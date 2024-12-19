@@ -22,7 +22,6 @@ class HomeScreen extends StatelessWidget {
           elevation: 10,
         ),
         drawer: DrawerMenu(),
-        backgroundColor: Colors.grey,
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
@@ -56,7 +55,11 @@ class CardBody extends StatelessWidget {
           children: [
             Text(
               '¡Bienvenido!',
-              style: TextStyle(fontFamily: 'Roboto', fontSize: 28),
+              style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 28,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 5,
@@ -65,7 +68,7 @@ class CardBody extends StatelessWidget {
               maxLines: 5,
               textAlign: TextAlign.justify,
               style: TextStyle(fontSize: 16),
-              'CabaniasArg es la mejor app para encontrar cabañas en Argentina! Desde el norte al sur de la Argentina, en CabaniasArg vas a encontrar las mejores opciones de alquiler y al mejor precio',
+              '¡CabaniasArg es la mejor app para alquilar cabañas en Argentina! Desde el norte al sur del país, en CabaniasArg vas a encontrar las mejores opciones... ¡Y al mejor precio!',
             )
           ],
         ));
@@ -108,8 +111,7 @@ class _CardSwiperState extends State<CardSwiper> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("¿Quieres reservar $cabaniaName?"),
-          content:
-              const Text("Estás a punto de hacer una reserva. ¿Confirmas?"),
+          content: const Text("Estás a punto de hacer una reserva"),
           actions: <Widget>[
             TextButton(
               child: const Text("Cancelar"),
@@ -167,6 +169,7 @@ class _CardSwiperState extends State<CardSwiper> {
                             _showReservationDialog(context, novedad['name']);
                           },
                           child: Card(
+                            elevation: 30,
                             child: Container(
                               width: 300,
                               height: 300,
