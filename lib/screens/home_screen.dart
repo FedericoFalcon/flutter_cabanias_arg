@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../widgets/drawer_menu.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'reserva_form.dart';
+import '../widgets/drawer_menu.dart';
+import 'cabania_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -12,66 +12,63 @@ class HomeScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'CabaniasArg',
-            style: TextStyle(fontSize: 22, color: Colors.black87),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.blueAccent,
-          elevation: 10,
+      appBar: AppBar(
+        title: const Text(
+          'CabaniasArg',
+          style: TextStyle(fontSize: 22, color: Colors.black87),
         ),
-        drawer: DrawerMenu(),
-        body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              CardPoster(size: size),
-              const CardBody(),
-              const SizedBox(
-                height: 10,
-              ),
-              CardSwiper(),
-            ],
-          ),
-        ));
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
+        elevation: 10,
+      ),
+      drawer: DrawerMenu(),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            CardPoster(size: size),
+            const CardBody(),
+            const SizedBox(height: 10),
+            const CardSwiper(),
+          ],
+        ),
+      ),
+    );
   }
 }
 
 class CardBody extends StatelessWidget {
-  const CardBody({
-    Key? key,
-  }) : super(key: key);
+  const CardBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: double.infinity,
-        margin: const EdgeInsets.symmetric(vertical: 10),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '¡Bienvenido!',
-              style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 28,
-                  color: Colors.black54,
-                  fontWeight: FontWeight.bold),
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      child: const Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '¡Bienvenido!',
+            style: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: 28,
+              color: Colors.black54,
+              fontWeight: FontWeight.bold,
             ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              maxLines: 5,
-              textAlign: TextAlign.justify,
-              style: TextStyle(fontSize: 16),
-              '¡CabaniasArg es la mejor app para alquilar cabañas en Argentina! Desde el norte al sur del país, en CabaniasArg vas a encontrar las mejores opciones... ¡Y al mejor precio!',
-            )
-          ],
-        ));
+          ),
+          SizedBox(height: 5),
+          Text(
+            '¡CabaniasArg es la mejor app para alquilar cabañas en Argentina! Desde el norte al sur del país, en CabaniasArg vas a encontrar las mejores opciones... ¡Y al mejor precio!',
+            textAlign: TextAlign.justify,
+            style: TextStyle(fontSize: 16),
+            maxLines: 5,
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -105,42 +102,11 @@ class _CardSwiperState extends State<CardSwiper> {
     }
   }
 
-  void _showReservationDialog(BuildContext context, String cabaniaName) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("¿Quieres reservar $cabaniaName?"),
-          content: const Text("Estás a punto de hacer una reserva"),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("Cancelar"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text("Confirmar"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => FormularioReservaScreen()),
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 320,
+      height: 340,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -149,9 +115,10 @@ class _CardSwiperState extends State<CardSwiper> {
             child: Text(
               'Imperdibles del mes',
               style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Colors.black54),
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Colors.black54,
+              ),
             ),
           ),
           Expanded(
@@ -165,17 +132,26 @@ class _CardSwiperState extends State<CardSwiper> {
                     itemBuilder: (context, index) {
                       var novedad = _novedades[index];
                       return GestureDetector(
-                          onTap: () {
-                            _showReservationDialog(context, novedad['name']);
-                          },
-                          child: Card(
-                            elevation: 30,
-                            child: Container(
-                              width: 300,
-                              height: 300,
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 10),
-                              alignment: Alignment.center,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CabaniaScreen(
+                                name: novedad['name'],
+                                image: novedad['image'],
+                                city: novedad['city'],
+                                price: novedad['price'],
+                                description: novedad['name'],
+                              ),
+                            ),
+                          );
+                        },
+                        child: Card(
+                          elevation: 10,
+                          child: SizedBox(
+                            width: 300,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -190,25 +166,37 @@ class _CardSwiperState extends State<CardSwiper> {
                                       fit: BoxFit.cover,
                                     ),
                                   ),
+                                  const SizedBox(height: 10),
                                   Text(
                                     novedad['name'],
-                                    style: const TextStyle(fontSize: 17),
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  const SizedBox(
-                                    height: 5,
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    novedad['city'],
+                                    style: const TextStyle(fontSize: 14),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  Text(novedad['city']),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
+                                  const SizedBox(height: 15),
                                   Text(
                                     novedad['price'],
+                                    style: const TextStyle(
+                                        fontSize: 16, color: Colors.green),
+                                    maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),
                             ),
-                          ));
+                          ),
+                        ),
+                      );
                     },
                   ),
           ),

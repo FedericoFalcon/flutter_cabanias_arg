@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert'; // Para convertir la respuesta JSON en objetos Dart
 import '../widgets/drawer_menu.dart';
+import 'cabania_screen.dart';
 
 class AlquileresScreen extends StatefulWidget {
   const AlquileresScreen({super.key});
@@ -19,7 +20,6 @@ class _AlquileresScreenState extends State<AlquileresScreen> {
     fetchAlquileres();
   }
 
-  // Llamada a la API
   Future<void> fetchAlquileres() async {
     final response = await http.get(
         Uri.parse('https://demo-express-2024.onrender.com/api/v1/alquileres'));
@@ -42,7 +42,7 @@ class _AlquileresScreenState extends State<AlquileresScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'CabaniasArg',
+          'Alquileres disponibles',
           style: TextStyle(fontSize: 22, color: Colors.black87),
         ),
         centerTitle: true,
@@ -73,7 +73,18 @@ class _AlquileresScreenState extends State<AlquileresScreen> {
                   ),
                   trailing: const Icon(Icons.arrow_forward),
                   onTap: () {
-                    // dejo listo
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CabaniaScreen(
+                          image: alquiler.image,
+                          name: alquiler.name,
+                          city: alquiler.city,
+                          price: alquiler.price,
+                          description: alquiler.name,
+                        ),
+                      ),
+                    );
                   },
                 );
               },
