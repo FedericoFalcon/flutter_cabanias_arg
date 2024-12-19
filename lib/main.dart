@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
       initialRoute: 'home',
       routes: {
         'home': (context) => const HomeScreen(),
+        'alquileres': (context) => const AlquileresScreen(),
       },
     );
   }

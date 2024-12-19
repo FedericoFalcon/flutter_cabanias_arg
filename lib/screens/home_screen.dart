@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/drawer_menu.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'reserva_form.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -61,155 +64,154 @@ class CardBody extends StatelessWidget {
             Text(
               maxLines: 5,
               textAlign: TextAlign.justify,
-              'CabaniasArg es la mejor app para encontrar cabañas en Argentina! Ya sea para venta o alquiler, en CabaniasArg vas a encontrar las mejores opciones y al mejor precio',
+              style: TextStyle(fontSize: 16),
+              'CabaniasArg es la mejor app para encontrar cabañas en Argentina! Desde el norte al sur de la Argentina, en CabaniasArg vas a encontrar las mejores opciones de alquiler y al mejor precio',
             )
           ],
         ));
   }
 }
 
-class CardSwiper extends StatelessWidget {
-  final List _castMovies = <Map<String, String>>[
-    {
-      'image':
-          'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/86jeYFV40KctQMDQIWhJ5oviNGj.jpg',
-      'actor': 'Emilia Clarke',
-      'name': 'Daenerys Targaryen',
-      'duration':
-          '80 episodios.80 episodios.80 episodios.80 episodios.80 episodios.80 episodios.80 episodios.'
-    },
-    {
-      'image':
-          'https://www.themoviedb.org/t/p/w138_and_h175_face/htGBMno71BJAEGF3Y9f62MdA3Yt.jpg',
-      'actor': 'Kit Harington',
-      'name': 'Jon Snow',
-      'duration': '80 episodios'
-    },
-    {
-      'image':
-          'https://www.themoviedb.org/t/p/w138_and_h175_face/lRsRgnksAhBRXwAB68MFjmTtLrk.jpg',
-      'actor': 'Peter Dinklage',
-      'name': 'Tyrion Lannister',
-      'duration': '79 episodios'
-    },
-    {
-      'image':
-          'https://www.themoviedb.org/t/p/w138_and_h175_face/n9zXQhjtXQnc30kqF66hdX4i3PG.jpg',
-      'actor': 'Iain Glen',
-      'name': 'Jorah Mormont',
-      'duration': '79 episodios'
-    },
-    {
-      'image':
-          'https://www.themoviedb.org/t/p/w138_and_h175_face/5SL4Y4alOYF9EahObfsb6GaDHg4.jpg',
-      'actor': 'Lena Headey',
-      'name': 'Cersei Lannister',
-      'duration': '77 episodios'
-    },
-    {
-      'image':
-          'https://www.themoviedb.org/t/p/w138_and_h175_face/zopxZsUZmxZ4sGEfm4cRr7FVoM4.jpg',
-      'actor': 'Sophie Turner',
-      'name': 'Sansa Stark',
-      'duration': '76 episodios'
-    },
-    {
-      'image':
-          'https://www.themoviedb.org/t/p/w138_and_h175_face/puWXJbe5ZGnOqJhVr9lEgstvygy.jpg',
-      'actor': 'Maisie Williams',
-      'name': 'Arya Stark',
-      'duration': '75 episodios'
-    },
-    {
-      'image':
-          'https://www.themoviedb.org/t/p/w138_and_h175_face/7gPpG0TBMX20tPhWC8BT47x2lnh.jpg',
-      'actor': 'Alfie Allen',
-      'name': 'Theon Greyjoy',
-      'duration': '74 episodios'
-    },
-    {
-      'image':
-          'https://www.themoviedb.org/t/p/w138_and_h175_face/zRc8eGN3aFjDapoAKpzWBYBFxCr.jpg',
-      'actor': 'Conleth Hill',
-      'name': 'Lord Varys, Varys',
-      'duration': '72 episodios'
-    },
-  ];
+class CardSwiper extends StatefulWidget {
+  const CardSwiper({Key? key}) : super(key: key);
 
-  CardSwiper({
-    Key? key,
-  }) : super(key: key);
+  @override
+  _CardSwiperState createState() => _CardSwiperState();
+}
+
+class _CardSwiperState extends State<CardSwiper> {
+  List _novedades = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    final response = await http.get(
+        Uri.parse('https://demo-express-2024.onrender.com/api/v1/novedades'));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      setState(() {
+        _novedades = data['novedades'];
+      });
+    } else {
+      throw Exception('Error al cargar los datos');
+    }
+  }
+
+  void _showReservationDialog(BuildContext context, String cabaniaName) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("¿Quieres reservar $cabaniaName?"),
+          content:
+              const Text("Estás a punto de hacer una reserva. ¿Confirmas?"),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Cancelar"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text("Confirmar"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FormularioReservaScreen()),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: double.infinity,
-        height: 320,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Imperdibles del mes',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.black54),
-              ),
+      width: double.infinity,
+      height: 320,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Imperdibles del mes',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: Colors.black54),
             ),
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-                itemCount: _castMovies.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: Container(
-                      width: 150,
-                      height: 180,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 10),
-                      alignment: Alignment.center,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: FadeInImage(
-                              placeholder:
-                                  const AssetImage('assets/loading.gif'),
-                              image: NetworkImage(_castMovies[index]['image']),
-                              width: 140,
-                              height: 160,
-                              fit: BoxFit.cover,
+          ),
+          Expanded(
+            child: _novedades.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: _novedades.length,
+                    itemBuilder: (context, index) {
+                      var novedad = _novedades[index];
+                      return GestureDetector(
+                          onTap: () {
+                            _showReservationDialog(context, novedad['name']);
+                          },
+                          child: Card(
+                            child: Container(
+                              width: 300,
+                              height: 300,
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              alignment: Alignment.center,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: FadeInImage(
+                                      placeholder: const AssetImage(
+                                          'assets/loading.gif'),
+                                      image: NetworkImage(novedad['image']),
+                                      width: 300,
+                                      height: 160,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Text(
+                                    novedad['name'],
+                                    style: const TextStyle(fontSize: 17),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(novedad['city']),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text(
+                                    novedad['price'],
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Text(
-                            _castMovies[index]['actor'],
-                            style: const TextStyle(fontSize: 17),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(_castMovies[index]['name']),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Text(
-                            _castMovies[index]['duration'],
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            )
-          ],
-        ));
+                          ));
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
