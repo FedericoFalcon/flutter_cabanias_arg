@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'reserva_form.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class CabaniaScreen extends StatelessWidget {
   final String image;
@@ -99,7 +101,10 @@ class CabaniaScreen extends StatelessWidget {
                         horizontal: 25, vertical: 10),
                     textStyle: const TextStyle(fontSize: 16),
                   ),
-                  child: const Text('Alquilar'),
+                  child: const Text(
+                    'Alquilar',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ),
@@ -111,7 +116,7 @@ class CabaniaScreen extends StatelessWidget {
               ),
             ),
             FutureBuilder<List<String>>(
-              future: fetchGalleryImages(),
+              future: fetchInteriorImages(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -199,13 +204,19 @@ class CabaniaScreen extends StatelessWidget {
     );
   }
 
-  Future<List<String>> fetchGalleryImages() async {
-    await Future.delayed(const Duration(seconds: 2));
-    return [
-      'https://images.unsplash.com/photo-1518107784960-eb57c673a7ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
-      'https://images.unsplash.com/photo-1542718610-a1d656d1884c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
-      'https://images.unsplash.com/photo-1525113990976-399835c43838?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
-      'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
-    ];
+  Future<List<String>> fetchInteriorImages() async {
+    final response = await http.get(
+        Uri.parse('https://demo-express-2024.onrender.com/api/v1/interiores'));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      List<String> images = [];
+      for (var item in data['interiores']) {
+        images.add(item['image']);
+      }
+      return images;
+    } else {
+      throw Exception('Error al cargar las imágenes');
+    }
   }
 }
